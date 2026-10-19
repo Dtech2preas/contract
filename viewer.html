@@ -26,6 +26,9 @@
         .signature-field input { border: none; border-bottom: 1px solid #000; width: 100%; font-family: "Brush Script MT", cursive, sans-serif; font-size: 24px; text-align: center; padding: 10px 0; background: transparent; outline: none; }
         .signature-field label { display: block; margin-top: 5px; font-family: sans-serif; font-size: 12px; }
 
+        .inline-input { border: none; border-bottom: 1px solid #000; font-family: inherit; font-size: 12pt; background: transparent; outline: none; padding: 2px 5px; }
+        .signature-input { border: none; border-bottom: 1px solid #000; font-family: "Brush Script MT", cursive, sans-serif; font-size: 20px; background: transparent; outline: none; padding: 2px 5px; }
+
         .actions { position: fixed; bottom: 20px; right: 20px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; text-align: center; display: none; }
         .actions p { margin: 0 0 10px 0; font-family: sans-serif; font-size: 13px; color: #555; }
         .btn { background: #000; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-family: sans-serif; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; box-sizing: border-box; }
@@ -55,7 +58,7 @@
 
         <div class="content" id="cContent"></div>
 
-        <div class="fillable-section">
+        <div class="fillable-section" id="genericFillable" style="display: none;">
             <h3>Participant Details</h3>
             <div class="form-row">
                 <div class="form-field">
@@ -112,6 +115,11 @@
                 document.getElementById('cTitle').textContent = contract.title;
                 document.getElementById('cContent').innerHTML = contract.content;
                 document.title = `${contract.title} - DTech Contracts`;
+
+                // Hide generic fillable section if this is a hardcoded contract that already has inputs
+                if (!id.startsWith('referral-agreement')) {
+                    document.getElementById('genericFillable').style.display = 'block';
+                }
 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('contractPage').style.display = 'block';
