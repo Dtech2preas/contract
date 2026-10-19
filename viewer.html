@@ -5,34 +5,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Contract</title>
     <style>
-        body { font-family: "Times New Roman", Times, serif; margin: 0; padding: 0; background-color: #e5e7eb; color: #000; line-height: 1.6; }
-        .page { max-width: 800px; margin: 40px auto; background: #fff; padding: 60px 80px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 1000px; position: relative; display: none; }
-        #loading, #error { max-width: 800px; margin: 40px auto; text-align: center; font-family: sans-serif; padding: 40px; background: #fff; border-radius: 8px; }
-        #error { color: red; display: none; }
+        :root {
+            --primary-bg: #f3f4f6;
+            --page-bg: #ffffff;
+            --text-color: #1f2937;
+            --border-color: #d1d5db;
+            --input-border: #4b5563;
+        }
+        body {
+            font-family: "Georgia", "Times New Roman", serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .page {
+            max-width: 800px;
+            margin: 40px auto;
+            background: var(--page-bg);
+            padding: 60px 80px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            min-height: 1000px;
+            position: relative;
+            display: none;
+            border-radius: 4px;
+        }
+        #loading, #error {
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 40px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        #error { color: #dc2626; display: none; }
 
-        .header { text-align: center; margin-bottom: 40px; }
-        .header h1 { font-size: 28px; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px; }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--text-color);
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: "Arial", sans-serif;
+            color: #111;
+        }
         .content { margin-bottom: 50px; font-size: 12pt; text-align: justify; }
 
         .fillable-section { margin-top: 50px; border-top: 2px solid #000; padding-top: 30px; }
-        .fillable-section h3 { margin-top: 0; }
+        .fillable-section h3 { margin-top: 0; font-family: "Arial", sans-serif; font-size: 14pt; }
         .form-row { display: flex; margin-bottom: 20px; gap: 20px; }
         .form-field { flex: 1; }
-        .form-field label { display: block; font-weight: bold; margin-bottom: 5px; font-family: sans-serif; font-size: 12px; color: #333; }
-        .form-field input { width: 100%; border: none; border-bottom: 1px solid #000; padding: 5px 0; font-family: inherit; font-size: 12pt; background: transparent; outline: none; }
+        .form-field label { display: block; font-weight: bold; margin-bottom: 5px; font-family: "Arial", sans-serif; font-size: 12px; color: #333; }
+        .form-field input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--input-border);
+            padding: 5px 0;
+            font-family: inherit;
+            font-size: 12pt;
+            background: transparent;
+            outline: none;
+            color: #0056b3;
+            transition: border-color 0.2s;
+        }
+        .form-field input:focus {
+            border-bottom: 2px solid #0056b3;
+        }
 
         .signature-box { margin-top: 30px; display: flex; gap: 40px; }
         .signature-field { flex: 1; text-align: center; }
-        .signature-field input { border: none; border-bottom: 1px solid #000; width: 100%; font-family: "Brush Script MT", cursive, sans-serif; font-size: 24px; text-align: center; padding: 10px 0; background: transparent; outline: none; }
-        .signature-field label { display: block; margin-top: 5px; font-family: sans-serif; font-size: 12px; }
+        .signature-field input {
+            border: none;
+            border-bottom: 1px solid var(--input-border);
+            width: 100%;
+            font-family: "Brush Script MT", cursive, sans-serif;
+            font-size: 24px;
+            text-align: center;
+            padding: 10px 0;
+            background: transparent;
+            outline: none;
+            color: #0056b3;
+            transition: border-color 0.2s;
+        }
+        .signature-field input:focus {
+            border-bottom: 2px solid #0056b3;
+        }
+        .signature-field label { display: block; margin-top: 5px; font-family: "Arial", sans-serif; font-size: 12px; }
 
-        .inline-input { border: none; border-bottom: 1px solid #000; font-family: inherit; font-size: 12pt; background: transparent; outline: none; padding: 2px 5px; }
-        .signature-input { border: none; border-bottom: 1px solid #000; font-family: "Brush Script MT", cursive, sans-serif; font-size: 20px; background: transparent; outline: none; padding: 2px 5px; }
+        .inline-input { border: none; border-bottom: 1px solid var(--input-border); font-family: inherit; font-size: 12pt; background: transparent; outline: none; padding: 2px 5px; color: #0056b3; transition: border-color 0.2s; }
+        .inline-input:focus { border-bottom: 2px solid #0056b3; }
+        .signature-input { border: none; border-bottom: 1px solid var(--input-border); font-family: "Brush Script MT", cursive, sans-serif; font-size: 20px; background: transparent; outline: none; padding: 2px 5px; color: #0056b3; transition: border-color 0.2s; }
+        .signature-input:focus { border-bottom: 2px solid #0056b3; }
 
-        .actions { position: fixed; bottom: 20px; right: 20px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; text-align: center; display: none; }
-        .actions p { margin: 0 0 10px 0; font-family: sans-serif; font-size: 13px; color: #555; }
-        .btn { background: #000; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-family: sans-serif; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; box-sizing: border-box; }
-        .btn:hover { background: #333; }
+        .actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 100;
+            text-align: center;
+            display: none;
+            max-width: 250px;
+            border: 1px solid #e5e7eb;
+        }
+        .actions p { margin: 0 0 15px 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; color: #4b5563; }
+        .btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            width: 100%;
+            box-sizing: border-box;
+            transition: background 0.2s;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+        .btn:hover { background: #1d4ed8; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .page {
+                margin: 20px 10px;
+                padding: 40px 20px;
+                box-shadow: none;
+                min-height: auto;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .signature-box {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .actions {
+                position: static;
+                max-width: none;
+                margin: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+        }
 
         @media print {
             body { background: #fff; }
@@ -41,6 +171,7 @@
             input { border-bottom: 1px solid #000 !important; color: #000 !important; }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div id="loading">Loading contract details...</div>
@@ -48,7 +179,7 @@
 
     <div class="actions" id="actionsPanel">
         <p>Review the contract, fill in your details below, and save.</p>
-        <button class="btn" onclick="window.print()">Download / Save PDF</button>
+        <button class="btn" onclick="downloadPDF()">Download / Save PDF</button>
     </div>
 
     <div class="page" id="contractPage">
@@ -77,7 +208,7 @@
                 </div>
                 <div class="form-field">
                     <label>Date</label>
-                    <input type="date" style="width: 100%; border: none; border-bottom: 1px solid #000; padding: 5px 0; font-family: inherit; font-size: 12pt; background: transparent; outline: none;">
+                    <input type="date" style="width: 100%; border: none; border-bottom: 1px solid #000; padding: 5px 0; font-family: inherit; font-size: 12pt; background: transparent; outline: none; color: #0056b3;">
                 </div>
             </div>
 
@@ -92,6 +223,7 @@
 
     <script>
         const API_URL = 'https://sign.dtech-services.co.za/api';
+        let contractTitle = 'Contract';
 
         async function loadContract() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -111,6 +243,7 @@
                 }
 
                 const contract = await res.json();
+                contractTitle = contract.title;
 
                 document.getElementById('cTitle').textContent = contract.title;
                 document.getElementById('cContent').innerHTML = contract.content;
@@ -136,6 +269,43 @@
             const errEl = document.getElementById('error');
             errEl.textContent = msg;
             errEl.style.display = 'block';
+        }
+
+        function downloadPDF() {
+            // Sync the input values to the DOM so html2pdf captures them
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                if (input.tagName === 'TEXTAREA') {
+                    input.innerHTML = input.value;
+                } else {
+                    input.setAttribute('value', input.value);
+                }
+            });
+
+            // Adjust styles for PDF generation temporarily if needed
+            inputs.forEach(input => {
+                input.style.color = '#000';
+                input.style.borderBottom = '1px solid #000';
+            });
+
+            const element = document.getElementById('contractPage');
+            const filename = contractTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.pdf';
+            const opt = {
+                margin:       10,
+                filename:     filename,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Generate the PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Revert temporary styles
+                inputs.forEach(input => {
+                    input.style.color = '';
+                    input.style.borderBottom = '';
+                });
+            });
         }
 
         loadContract();
