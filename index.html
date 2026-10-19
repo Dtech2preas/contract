@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTech Contracts</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f6f8; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        h1 { margin-top: 0; color: #111; font-size: 24px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { font-size: 18px; margin-top: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; }
+        input[type="text"], input[type="password"], textarea { width: 100%; padding: 12px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 14px; }
+        input[type="text"]:focus, input[type="password"]:focus, textarea:focus { border-color: #0056b3; outline: none; }
+        textarea { height: 250px; resize: vertical; }
+        button { background-color: #0056b3; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background 0.2s; }
+        button:hover { background-color: #004494; }
+        .contract-list { margin-top: 40px; }
+        .contract-item { border: 1px solid #eee; padding: 15px; border-radius: 4px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; background: #fafafa; }
+        .contract-info strong { display: block; font-size: 16px; margin-bottom: 4px; }
+        .contract-info small { color: #666; }
+        .contract-links { display: flex; gap: 10px; align-items: center; }
+        .contract-links a, .contract-links button { text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 14px; cursor: pointer; font-weight: 500; }
+        .btn-view { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+        .btn-copy { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+        .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+        .contract-links a:hover, .contract-links button:hover { opacity: 0.8; }
+
+        #adminPanel, #loginPanel { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container" id="loginPanel">
+        <h1>DTech Contracts - Admin Login</h1>
+        <div class="form-group">
+            <label for="password">Admin Password</label>
+            <input type="password" id="password" placeholder="Enter password...">
+        </div>
+        <button onclick="login()">Login</button>
+        <p id="loginError" style="color: red; display: none;">Invalid password.</p>
+    </div>
+
+    <div class="container" id="adminPanel">
+        <h1>DTech Contracts - Admin Dashboard</h1>
+
+        <h2>Create New Contract</h2>
+        <div class="form-group">
+            <label for="title">Contract Title</label>
+            <input type="text" id="title" required placeholder="e.g. Service Level Agreement">
+        </div>
+        <div class="form-group">
+            <label for="content">Contract Content (HTML accepted)</label>
+            <textarea id="content" required placeholder="Enter the terms of the contract here..."></textarea>
+        </div>
+        <button onclick="createContract()">Create Contract</button>
+
+        <div class="contract-list">
+            <h2>Existing Contracts</h2>
+            <div id="contractsContainer">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://sign.dtech-services.co.za/api';
+        let authHeader = '';
+
+        function login() {
+            const pwd = document.getElementById('password').value;
+            authHeader = 'Basic ' + btoa('admin:' + pwd);
+            loadContracts();
+        }
+
+        async function loadContracts() {
+            try {
+                const res = await fetch(`${API_URL}/contracts`, {
+                    headers: { 'Authorization': authHeader }
+                });
+
+                if (res.status === 401) {
+                    document.getElementById('loginError').style.display = 'block';
+                    return;
+                }
+
+                if (!res.ok) throw new Error('Failed to load');
+
+                const contracts = await res.json();
+                document.getElementById('loginPanel').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+
+                renderContracts(contracts);
+            } catch (e) {
+                console.error(e);
+                alert("Error connecting to server.");
+            }
+        }
+
+        function renderContracts(contracts) {
+            const container = document.getElementById('contractsContainer');
+            if (contracts.length === 0) {
+                container.innerHTML = '<p style="color: #666;">No contracts created yet.</p>';
+                return;
+            }
+
+            container.innerHTML = contracts.map(c => `
+                <div class="contract-item">
+                    <div class="contract-info">
+                        <strong>${escapeHtml(c.title)}</strong>
+                        <small>Created: ${new Date(c.createdAt).toLocaleString()}</small>
+                    </div>
+                    <div class="contract-links">
+                        <a href="viewer.html?id=${c.id}" target="_blank" class="btn-view">View</a>
+                        <button onclick="copyLink('viewer.html?id=${c.id}')" class="btn-copy">Copy Link</button>
+                        <button class="btn-delete" onclick="deleteContract('${c.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function createContract() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            if (!title || !content) {
+                alert("Please fill in both fields");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/contracts`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': authHeader,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title, content })
+                });
+
+                if (res.ok) {
+                    document.getElementById('title').value = '';
+                    document.getElementById('content').value = '';
+                    loadContracts();
+                } else {
+                    alert("Error creating contract");
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function deleteContract(id) {
+            if (!confirm('Delete this contract forever?')) return;
+
+            try {
+                const res = await fetch(`${API_URL}/contracts/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': authHeader }
+                });
+
+                if (res.ok) {
+                    loadContracts();
+                } else {
+                    alert("Error deleting contract");
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function copyLink(path) {
+            const url = window.location.origin + window.location.pathname.replace(/index\.html$/, '') + path;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied to clipboard: ' + url);
+            });
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        // Init
+        document.getElementById('loginPanel').style.display = 'block';
+    </script>
+</body>
+</html>
