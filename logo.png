@@ -1,0 +1,2 @@
+# Dummy file to avoid errors in case playwright tries to load it, though it might just show a broken image icon.
+# The user said they will put it there, so I'll just create a dummy one for testing.

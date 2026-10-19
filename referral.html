@@ -190,6 +190,9 @@
 
     <div class="page" id="contractPage">
         <div class="content">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="logo.png" alt="D-TECH Logo" style="max-height: 80px; width: auto;">
+            </div>
             <div class="header">
                 <h1>INDEPENDENT REFERRAL & REVENUE-SHARE AGREEMENT</h1>
             </div>
@@ -242,18 +245,20 @@
             <div class="signature-section">
                 <div class="signature-block">
                     <strong>For THE D-TECH ECOSYSTEM (Pty) Ltd:</strong>
-                    <p>Signature: <input type="text" class="signature-input" placeholder="Sign here..." style="width: 100%;"></p>
-                    <p>Name: <input type="text" class="inline-input" value="Founder / Director" readonly style="width: 100%; color: #000; border-color: #000;"></p>
-                    <p>Capacity: <span style="font-family: inherit; font-size: 12pt;">Founder / Director</span></p>
-                    <p>Date: <input type="date" class="inline-input" style="width: 100%;"></p>
+                    <p>Signature: <input type="text" class="signature-input" value="Mr SJ Mochebane" readonly style="width: 100%; color: #000; border-color: #000;"></p>
+                    <p>Name: <input type="text" class="inline-input" value="Seakwa jonas mochebane" readonly style="width: 100%; color: #000; border-color: #000;"></p>
+                    <p>Capacity: <span style="font-family: inherit; font-size: 12pt;">Director</span></p>
+                    <p>Date: <input type="text" class="inline-input" value="09 Oct 2026" readonly style="width: 100%; color: #000; border-color: #000;"></p>
                 </div>
                 <div class="signature-block">
                     <strong>For the Referral Partner:</strong>
                     <p>Signature: <input type="text" class="signature-input" placeholder="Sign here..." style="width: 100%;"></p>
                     <p>Full Name: <input type="text" class="inline-input" placeholder="Type name here..." style="width: 100%;"></p>
                     <p>ID Number: <input type="text" class="inline-input" placeholder="Type ID here..." style="width: 100%;"></p>
-                    <p style="margin-bottom: 5px;">Banking Details (Bank, Acc No, Branch):</p>
-                    <textarea class="inline-input" placeholder="Type banking details here..." style="width: 100%; height: 60px; resize: none;"></textarea>
+                    <p style="margin-bottom: 5px; font-weight: bold;">Banking Details:</p>
+                    <p>Bank Name: <input type="text" class="inline-input" placeholder="Type bank name here..." style="width: 100%;"></p>
+                    <p>Account Number: <input type="text" class="inline-input" placeholder="Type account number here..." style="width: 100%;"></p>
+                    <p>Branch Code: <input type="text" class="inline-input" placeholder="Type branch code here..." style="width: 100%;"></p>
                     <p>Date: <input type="date" class="inline-input" style="width: 100%;"></p>
                 </div>
             </div>
@@ -284,7 +289,8 @@
                 filename:     'Referral_Agreement.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: 'avoid-all' }
             };
 
             // Generate the PDF
