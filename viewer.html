@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Contract</title>
+    <style>
+        body { font-family: "Times New Roman", Times, serif; margin: 0; padding: 0; background-color: #e5e7eb; color: #000; line-height: 1.6; }
+        .page { max-width: 800px; margin: 40px auto; background: #fff; padding: 60px 80px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 1000px; position: relative; display: none; }
+        #loading, #error { max-width: 800px; margin: 40px auto; text-align: center; font-family: sans-serif; padding: 40px; background: #fff; border-radius: 8px; }
+        #error { color: red; display: none; }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 28px; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px; }
+        .content { margin-bottom: 50px; font-size: 12pt; text-align: justify; }
+
+        .fillable-section { margin-top: 50px; border-top: 2px solid #000; padding-top: 30px; }
+        .fillable-section h3 { margin-top: 0; }
+        .form-row { display: flex; margin-bottom: 20px; gap: 20px; }
+        .form-field { flex: 1; }
+        .form-field label { display: block; font-weight: bold; margin-bottom: 5px; font-family: sans-serif; font-size: 12px; color: #333; }
+        .form-field input { width: 100%; border: none; border-bottom: 1px solid #000; padding: 5px 0; font-family: inherit; font-size: 12pt; background: transparent; outline: none; }
+
+        .signature-box { margin-top: 30px; display: flex; gap: 40px; }
+        .signature-field { flex: 1; text-align: center; }
+        .signature-field input { border: none; border-bottom: 1px solid #000; width: 100%; font-family: "Brush Script MT", cursive, sans-serif; font-size: 24px; text-align: center; padding: 10px 0; background: transparent; outline: none; }
+        .signature-field label { display: block; margin-top: 5px; font-family: sans-serif; font-size: 12px; }
+
+        .inline-input { border: none; border-bottom: 1px solid #000; font-family: inherit; font-size: 12pt; background: transparent; outline: none; padding: 2px 5px; }
+        .signature-input { border: none; border-bottom: 1px solid #000; font-family: "Brush Script MT", cursive, sans-serif; font-size: 20px; background: transparent; outline: none; padding: 2px 5px; }
+
+        .actions { position: fixed; bottom: 20px; right: 20px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 100; text-align: center; display: none; }
+        .actions p { margin: 0 0 10px 0; font-family: sans-serif; font-size: 13px; color: #555; }
+        .btn { background: #000; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-family: sans-serif; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; box-sizing: border-box; }
+        .btn:hover { background: #333; }
+
+        @media print {
+            body { background: #fff; }
+            .page { margin: 0; padding: 0; box-shadow: none; min-height: auto; max-width: none; }
+            .actions { display: none !important; }
+            input { border-bottom: 1px solid #000 !important; color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">Loading contract details...</div>
+    <div id="error"></div>
+
+    <div class="actions" id="actionsPanel">
+        <p>Review the contract, fill in your details below, and save.</p>
+        <button class="btn" onclick="window.print()">Download / Save PDF</button>
+    </div>
+
+    <div class="page" id="contractPage">
+        <div class="header">
+            <h1 id="cTitle"></h1>
+        </div>
+
+        <div class="content" id="cContent"></div>
+
+        <div class="fillable-section" id="genericFillable" style="display: none;">
+            <h3>Participant Details</h3>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Full Legal Name</label>
+                    <input type="text" placeholder="Type name here...">
+                </div>
+                <div class="form-field">
+                    <label>ID / Passport Number</label>
+                    <input type="text" placeholder="Type ID here...">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Email Address</label>
+                    <input type="text" placeholder="Type email here...">
+                </div>
+                <div class="form-field">
+                    <label>Date</label>
+                    <input type="date" style="width: 100%; border: none; border-bottom: 1px solid #000; padding: 5px 0; font-family: inherit; font-size: 12pt; background: transparent; outline: none;">
+                </div>
+            </div>
+
+            <div class="signature-box">
+                <div class="signature-field">
+                    <input type="text" placeholder="Sign here...">
+                    <label>Signature</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://sign.dtech-services.co.za/api';
+
+        async function loadContract() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+
+            if (!id) {
+                showError("No contract ID provided.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/contracts/${id}`);
+
+                if (!res.ok) {
+                    showError("Contract not found or has been deleted.");
+                    return;
+                }
+
+                const contract = await res.json();
+
+                document.getElementById('cTitle').textContent = contract.title;
+                document.getElementById('cContent').innerHTML = contract.content;
+                document.title = `${contract.title} - DTech Contracts`;
+
+                // Hide generic fillable section if this is a hardcoded contract that already has inputs
+                if (!id.startsWith('referral-agreement')) {
+                    document.getElementById('genericFillable').style.display = 'block';
+                }
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('contractPage').style.display = 'block';
+                document.getElementById('actionsPanel').style.display = 'block';
+
+            } catch (e) {
+                console.error(e);
+                showError("Error connecting to server.");
+            }
+        }
+
+        function showError(msg) {
+            document.getElementById('loading').style.display = 'none';
+            const errEl = document.getElementById('error');
+            errEl.textContent = msg;
+            errEl.style.display = 'block';
+        }
+
+        loadContract();
+    </script>
+</body>
+</html>
