@@ -1,0 +1,13 @@
+I want to remake this n make it into a dtech only contract website.. where I can create business contracts n the dev them which I get a URL ..which I can share to anyone n they can open the URL see the contact fill in their details and then save it(download it which they have have a copy n the can also send it to me ) what are the requirements.. 
+
+Actually we will be using couldfalre worker as the sever less back end 
+N kv as the source of storage.. make sure that only I can access the main dashboard of creating contact n seelk all fotnehm understood aadmin password that's in cloudflare variables under the name DTECH_PASS 
+
+N SLSO THE KV name spacewe eil be using is CONTRACT_KV 
+
+you'll create the hmsl.ss well as the worker.js(which all the logic should be in their bcz I'll be manual copying that worker.js to cloudflare worker 
+
+You need to allow it to be able to give am a URL to access the contract n everyone else to accept them read only ..when they type in details it's only on their local storage side n then they can download it which the typedin details.. do share it to me or themselves have it 
+
+
+The worker URL is under the customs domain sign.dtech-services.co.za 
