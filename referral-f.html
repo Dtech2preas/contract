@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Partner & Referral Agreement</title>
+    <style>
+        :root {
+            --primary-bg: #f3f4f6;
+            --page-bg: #ffffff;
+            --text-color: #1f2937;
+            --border-color: #d1d5db;
+            --input-border: #4b5563;
+        }
+        body {
+            font-family: "Georgia", "Times New Roman", serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .page {
+            max-width: 800px;
+            margin: 40px auto;
+            background: var(--page-bg);
+            padding: 60px 80px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            min-height: 1000px;
+            position: relative;
+            border-radius: 4px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--text-color);
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: "Arial", sans-serif;
+            color: #111;
+        }
+
+        .content { margin-bottom: 50px; font-size: 12pt; text-align: justify; }
+
+        .content h3 {
+            font-family: "Arial", sans-serif;
+            font-size: 14pt;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #000;
+        }
+
+        .inline-input {
+            border: none;
+            border-bottom: 1px solid var(--input-border);
+            font-family: inherit;
+            font-size: 12pt;
+            background: transparent;
+            outline: none;
+            padding: 2px 5px;
+            color: #0056b3;
+            transition: border-color 0.2s;
+        }
+        .inline-input:focus {
+            border-bottom: 2px solid #0056b3;
+        }
+
+        .signature-input {
+            border: none;
+            border-bottom: 1px solid var(--input-border);
+            font-family: "Brush Script MT", cursive, sans-serif;
+            font-size: 24px;
+            background: transparent;
+            outline: none;
+            padding: 5px;
+            text-align: center;
+            color: #0056b3;
+            transition: border-color 0.2s;
+        }
+        .signature-input:focus {
+            border-bottom: 2px solid #0056b3;
+        }
+
+        .actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            z-index: 100;
+            text-align: center;
+            max-width: 250px;
+            border: 1px solid #e5e7eb;
+        }
+        .actions p { margin: 0 0 15px 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; color: #4b5563; }
+        .btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            width: 100%;
+            box-sizing: border-box;
+            transition: background 0.2s;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+        .btn:hover { background: #1d4ed8; }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            gap: 40px;
+        }
+
+        .signature-block {
+            flex: 1;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .signature-block p {
+            margin: 10px 0;
+        }
+
+        .signature-block strong {
+            display: block;
+            margin-bottom: 15px;
+            font-family: "Arial", sans-serif;
+            font-size: 11pt;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .page {
+                margin: 20px 10px;
+                padding: 40px 20px;
+                box-shadow: none;
+                min-height: auto;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .signature-section {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .actions {
+                position: static;
+                max-width: none;
+                margin: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .inline-input {
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+        }
+
+        @media print {
+            body { background: #fff; }
+            .page { margin: 0; padding: 0; box-shadow: none; min-height: auto; max-width: none; border-radius: 0; }
+            .actions { display: none !important; }
+            .signature-block { background: transparent; border: none; padding: 0; }
+            input, textarea { border-bottom: 1px solid #000 !important; color: #000 !important; }
+            input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="actions">
+        <p>Review the contract, fill in your details, and save.</p>
+        <button class="btn" onclick="downloadPDF()">Download / Save PDF</button>
+    </div>
+
+    <div class="page" id="contractPage">
+        <div class="content">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="logo.png" alt="D-TECH Logo" style="max-height: 80px; width: auto;">
+            </div>
+            <div class="header">
+                <h1>GROWTH PARTNER & REFERRAL AGREEMENT</h1>
+            </div>
+
+            <p>Let's make this simple! This Agreement kicks off on <input type="date" class="inline-input" style="width: 150px;"> between:</p>
+            <p><strong>THE D-TECH ECOSYSTEM (Pty) Ltd</strong> (trading as D-TECH Services), a private company registered in South Africa (Registration Number: 2026/697427/07, Email: info@dtech-services.co.za) (that's us!),</p>
+            <p>and</p>
+            <p><input type="text" placeholder="Full Name" class="inline-input" style="width: 300px;">, ID Number: <input type="text" placeholder="ID Number" class="inline-input" style="width: 200px;"> (that's you, our "Growth Partner").</p>
+
+            <h3>1. WHAT WE'RE DOING TOGETHER</h3>
+            <p>You're teaming up with us as an independent partner to spread the word and refer paying clients to our software platforms:</p>
+            <ul>
+                <li>D-TECH RES (Residence Management System); and</li>
+                <li>D-TECH Business Portal (Business CRM & Invoicing Platform).</li>
+            </ul>
+            <p><strong>Just to be clear:</strong> This isn't an employment contract. You are an independent contractor. Because you are your own boss, you are solely responsible for declaring and paying any personal taxes (like to SARS) on the commissions you earn from us.</p>
+
+            <h3>2. HOW YOU GET PAID (THE GOOD STUFF)</h3>
+            <p><strong>2.1 Commission Rates:</strong> When you refer someone and they subscribe and pay for our software, here is your cut of the net monthly subscription fees (that’s the fee after VAT, payment fees, refunds, and discounts):</p>
+            <ul>
+                <li><strong>D-TECH Business Portal:</strong> You earn 50% of the net monthly fees!</li>
+                <li><strong>D-TECH RES (Residence Management):</strong> You earn 40% of the net monthly fees!</li>
+            </ul>
+            <p><strong>2.2 The First Year:</strong> You keep earning that sweet percentage for up to 12 consecutive months for every client you bring in, starting from their first cleared payment.</p>
+            <p><strong>2.3 Year Two & Beyond:</strong> After those first 12 months, your commission for that initial batch of clients drops to a 15% ongoing maintenance rate. (Or, if things are going incredibly well, we can chat about employment or new terms!).</p>
+            <p><strong>2.4 When We Pay:</strong> You only get paid when we get paid. Commissions are earned once the cash hits our bank account. No commission on free trials, non-payments, or refunds.</p>
+            <p><strong>2.5 Payout Days:</strong> We deposit your earnings straight into your South African bank account within 5 business days after the end of each month.</p>
+            <p><strong>2.6 Tracking Leads:</strong> To make sure you get credit for your hard work, you must track your leads using your assigned referral link or code before the client signs up.</p>
+            <p><strong>2.7 Chargebacks:</strong> If a client reverses their payment or does a chargeback after we’ve already paid you, we will simply deduct that commission amount from your next payout.</p>
+
+            <h3>3. A FEW IMPORTANT RULES</h3>
+            <p><strong>3.1 Stick to the Script:</strong> We love your hustle, but please use our official pricing. You cannot invent custom discounts, promise features we haven't built, or make legally binding commitments on our behalf.</p>
+            <p><strong>3.2 Who Owns What:</strong> The software, code, logos, and everything related to D-TECH remains 100% our property. You get to use our approved marketing materials to help you make sales.</p>
+            <p><strong>3.3 Taking Care of the Client:</strong> The people you refer become our clients. We handle the tech setup, bugs, and hosting. Your job is just to make the introduction!</p>
+
+            <h3>4. KEEPING THINGS FAIR & CONFIDENTIAL</h3>
+            <p><strong>4.1 Shhh!:</strong> Keep our business info, pricing, and customer lists confidential.</p>
+            <p><strong>4.2 Don't Copy Us:</strong> Don't try to copy our software or direct the clients you bring us to a competitor while we work together (and for 12 months after we part ways).</p>
+            <p><strong>4.3 Respect Privacy (POPIA):</strong> Make sure the people you refer are okay with you sharing their contact info with us.</p>
+
+            <h3>5. ENDING THE AGREEMENT</h3>
+            <p><strong>5.1 Walking Away:</strong> Either of us can end this agreement by giving 30 days written notice (an email or WhatsApp works!).</p>
+            <p><strong>5.2 Your Earned Cash:</strong> If we part on good terms, you’ll still get paid your 40% or 50% for the remainder of the 12-month period for the active clients you already brought in.</p>
+            <p><strong>5.3 Playing by the Rules:</strong> If you get caught doing something shady (like fraud, stealing data, or trash-talking the brand), we will end this agreement immediately, and you will forfeit any unpaid commissions.</p>
+
+            <h3>6. THE LEGAL BITS</h3>
+            <p>This Agreement is governed by the laws of South Africa.</p>
+
+            <div class="signature-section">
+                <div class="signature-block">
+                    <strong>For D-TECH Services:</strong>
+                    <p>Signature: <input type="text" class="signature-input" value="Mr SJ Mochebane" readonly style="width: 100%; color: #000; border-color: #000;"></p>
+                    <p>Name: <input type="text" class="inline-input" value="Seakwa jonas mochebane" readonly style="width: 100%; color: #000; border-color: #000;"></p>
+                    <p>Capacity: <span style="font-family: inherit; font-size: 12pt;">Director</span></p>
+                    <p>Date: <input type="text" class="inline-input" value="09 Oct 2026" readonly style="width: 100%; color: #000; border-color: #000;"></p>
+                </div>
+                <div class="signature-block">
+                    <strong>For the Referral Partner:</strong>
+                    <p>Signature: <input type="text" class="signature-input" placeholder="Sign here..." style="width: 100%;"></p>
+                    <p>Full Name: <input type="text" class="inline-input" placeholder="Type name here..." style="width: 100%;"></p>
+                    <p>ID Number: <input type="text" class="inline-input" placeholder="Type ID here..." style="width: 100%;"></p>
+                    <p style="margin-bottom: 5px; font-weight: bold;">Banking Details:</p>
+                    <p>Bank Name: <input type="text" class="inline-input" placeholder="Type bank name here..." style="width: 100%;"></p>
+                    <p>Account Number: <input type="text" class="inline-input" placeholder="Type account number here..." style="width: 100%;"></p>
+                    <p>Branch Code: <input type="text" class="inline-input" placeholder="Type branch code here..." style="width: 100%;"></p>
+                    <p>Date: <input type="date" class="inline-input" style="width: 100%;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            // First sync the input values to the DOM so html2pdf captures them
+            const inputs = document.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                if (input.tagName === 'TEXTAREA') {
+                    input.innerHTML = input.value;
+                } else {
+                    input.setAttribute('value', input.value);
+                }
+            });
+
+            // Adjust styles for PDF generation temporarily if needed
+            inputs.forEach(input => {
+                input.style.color = '#000';
+                input.style.borderBottom = '1px solid #000';
+            });
+
+            const element = document.getElementById('contractPage');
+            const opt = {
+                margin:       10,
+                filename:     'Referral_Agreement.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: 'avoid-all' }
+            };
+
+            // Generate the PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Revert temporary styles
+                inputs.forEach(input => {
+                    input.style.color = '';
+                    input.style.borderBottom = '';
+                });
+            });
+        }
+    </script>
+</body>
+</html>
